@@ -10,51 +10,34 @@ import UIKit
 import MapKit
 import CoreLocation
 
+// Structure of the Tech Report Model
+struct artworkData: Decodable {
+    let id: String
+    let title: String
+    let artist: String
+    let yearOfWork: String
+    let Information: String
+    let lat: String
+    let long: String
+    let location: String
+    let locationNotes: String
+    let fileName: String
+    let lastModified: String
+    let enabled: String
+}
+
+// Structure of the Technical Reports JSON Data
+struct artworksData: Decodable {
+    let artworks2: [artworkData]
+}
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, CLLocationManagerDelegate {
-
-    
-
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var artworkTable: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     var locationManager:CLLocationManager!
-
-    
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        print("Do we even gret here?")
-//        return 10;
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "myCell")
-//        cell.textLabel?.text = "WHy isnt this worlign"
-//        return cell
-//    }
-    
     
     let artworkURLString = "https://cgi.csc.liv.ac.uk/~phil/Teaching/COMP327/artworksOnCampus/data.php?class=artworks2&lastUpdate=2017-11-01"
-    
-    // Structure of the Tech Report Model
-    struct artworkData: Decodable {
-        let id: String
-        let title: String
-        let artist: String
-        let yearOfWork: String
-        let Information: String
-        let lat: String
-        let long: String
-        let location: String
-        let locationNotes: String
-        let fileName: String
-        let lastModified: String
-        let enabled: String
-    }
-    
-    // Structure of the Technical Reports JSON Data
-    struct artworksData: Decodable {
-        let artworks2: [artworkData]
-    }
     var artworksByLocation: Dictionary<String, [artworkData]> = [:]
     var locations: [String] = []
     var currentLocation = ""
@@ -63,6 +46,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         getArtworkJSON()
+//        self.artworkTable.delegate = self
+//        self.artworkTable.dataSource = self
 
         artworkTable.reloadData()
         // Do any additional setup after loading the view, typically from a nib.
@@ -87,14 +72,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     let artworksList = try decoder.decode(artworksData.self, from: jsonData)
                     
                     
-//                    print(artworksList)
+
                     // Dictionary store arrays of reports, keyed by Year
                     var artworksByLocation: Dictionary<String, [artworkData]> = [:]
-                    
-//
+
                     // Array to store the available location strings across all the artworks
                     var locations: [String] = []
-//
+                    
                     // For all the retreived reports
                     for artwork in artworksList.artworks2 {
                         // Check if the year has been added to the years array and dictionary
@@ -108,8 +92,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         // Append the report to the relevant dictionary array
                         artworksByLocation[artwork.location]?.append(artwork)
                     }
-//
-//                    // Sort the years - this is so the sections can iterate over the years in order
+                    
+                    // Sort the years - TODO: Sort by distance
                     locations = locations.sorted(by: { $0 < $1 })
                     
                     // Get back to the main queue
@@ -213,20 +197,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // When we click a row, set the current year and report based on the index of the section and row
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Selected Row")
         currentLocation = locations[indexPath.section]
         currentArtwork = indexPath.row
 
-        // Segue to the report view controller
-        self.performSegue(withIdentifier: "to Artwork", sender: self)
+//        // Segue to the report view controller
+        performSegue(withIdentifier: "to Artwork", sender: tableView)
     }
     
     // Called when about peform segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        print("Preparing")
+        print(segue.identifier);
         // If we are going to view a report, send the reports data to the view
         if segue.identifier == "to Artwork" {
-//            let viewController = segue.destination as! ViewController
-//            let report: techReport = reportsByYear[currentYear]?[currentReport] ?? viewController.report
-//            viewController.report = report;
+            print(currentLocation)
+            print(currentArtwork)
+            let artWorkViewController = segue.destination as! ArtworkViewController
+            let artwork: artworkData = artworksByLocation[currentLocation]?[currentArtwork] ?? artWorkViewController.artwork;
+            artWorkViewController.artwork = artwork;
+            
         }
     }
 

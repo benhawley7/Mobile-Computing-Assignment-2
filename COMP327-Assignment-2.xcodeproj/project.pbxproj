@@ -13,6 +13,7 @@
 		E01014A521A7551F0091E012 /* COMP327_Assignment_2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E01014A321A7551F0091E012 /* COMP327_Assignment_2.xcdatamodeld */; };
 		E01014A721A755200091E012 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E01014A621A755200091E012 /* Assets.xcassets */; };
 		E01014AA21A755200091E012 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E01014A821A755200091E012 /* LaunchScreen.storyboard */; };
+		E0AC401F21BF1EB2001AA9FB /* ArtworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AC401E21BF1EB2001AA9FB /* ArtworkViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,8 @@
 		E01014A621A755200091E012 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E01014A921A755200091E012 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E01014AB21A755200091E012 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E0AC401E21BF1EB2001AA9FB /* ArtworkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkViewController.swift; sourceTree = "<group>"; };
+		E0EACFFB21BD64680094EB2D /* location.gpx */ = {isa = PBXFileReference; lastKnownFileType = text; name = location.gpx; path = "COMP327-Assignment-2/location.gpx"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +43,7 @@
 		E010149021A7551F0091E012 = {
 			isa = PBXGroup;
 			children = (
+				E0EACFFB21BD64680094EB2D /* location.gpx */,
 				E010149B21A7551F0091E012 /* COMP327-Assignment-2 */,
 				E010149A21A7551F0091E012 /* Products */,
 			);
@@ -59,6 +63,7 @@
 				E010149C21A7551F0091E012 /* AppDelegate.swift */,
 				E010149E21A7551F0091E012 /* ViewController.swift */,
 				E01014A021A7551F0091E012 /* Main.storyboard */,
+				E0AC401E21BF1EB2001AA9FB /* ArtworkViewController.swift */,
 				E01014A621A755200091E012 /* Assets.xcassets */,
 				E01014A821A755200091E012 /* LaunchScreen.storyboard */,
 				E01014AB21A755200091E012 /* Info.plist */,
@@ -141,6 +146,7 @@
 				E01014A521A7551F0091E012 /* COMP327_Assignment_2.xcdatamodeld in Sources */,
 				E010149F21A7551F0091E012 /* ViewController.swift in Sources */,
 				E010149D21A7551F0091E012 /* AppDelegate.swift in Sources */,
+				E0AC401F21BF1EB2001AA9FB /* ArtworkViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
