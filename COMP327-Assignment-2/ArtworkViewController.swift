@@ -24,6 +24,8 @@ class ArtworkViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "\(artwork.title)"
+
         artistNameLabel.text = artwork.artist
         titleLabel.text = artwork.title
         dateLabel.text = artwork.yearOfWork

@@ -31,7 +31,7 @@ struct artworksData: Decodable {
     let artworks2: [artworkData]
 }
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var artworkTable: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -45,6 +45,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mapView.delegate = self;
         getArtworkJSON()
 //        self.artworkTable.delegate = self
 //        self.artworkTable.dataSource = self
@@ -141,7 +142,32 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
         mapView.setRegion(region, animated: true)
+        
+        print(self.locations)
+        
+        self.locations.sort{(a, b) -> Bool in
+            let artworkA = artworksByLocation[a]?[0]
+            let latA = artworkA?.lat ?? ""
+            let longA = artworkA?.long ?? ""
+            guard let latitudeA = Double(latA) else { return false }
+            guard let longitudeA = Double(longA) else { return false}
+            let locationA = CLLocation(latitude: latitudeA, longitude: longitudeA)
+            let artworkB = artworksByLocation[b]?[0]
+            let latB = artworkB?.lat ?? ""
+            let longB = artworkB?.long ?? ""
+            guard let latitudeB = Double(latB) else { return false}
+            guard let longitudeB = Double(longB) else { return false }
+            let locationB = CLLocation(latitude: latitudeB, longitude: longitudeB)
+            let distanceA = locationA.distance(from: userLocation)
+            let distanceB = locationB.distance(from: userLocation)
+            return distanceA < distanceB
+        }
+        print(self.locations)
+        
+        artworkTable.reloadData();
+
     }
+    
     
     func setMapLocations() {
         for location in locations {
@@ -157,9 +183,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             guard let latitude = Double(lat) else { return }
             guard let longitude = Double(long) else { return }
-//            let span = MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
             let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-
 
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
@@ -167,7 +191,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             mapView.addAnnotation(annotation)
             
-  
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
+    {
+        let annotation = view.annotation ?? nil;
+
+        
+        guard annotation != nil else {
+            return
+        }
+        
+        let annotationTitle = annotation?.title!
+        currentLocation = annotationTitle ?? ""
+        
+        if (artworksByLocation[currentLocation]?.count ?? 0 > 1) {
+            performSegue(withIdentifier: "to Artwork Selector", sender: mapView)
+        } else {
+            currentArtwork = 0
+            performSegue(withIdentifier: "to Artwork", sender: mapView)
         }
     }
 
@@ -209,7 +252,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         print("Preparing")
-        print(segue.identifier);
         // If we are going to view a report, send the reports data to the view
         if segue.identifier == "to Artwork" {
             print(currentLocation)
@@ -217,7 +259,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let artWorkViewController = segue.destination as! ArtworkViewController
             let artwork: artworkData = artworksByLocation[currentLocation]?[currentArtwork] ?? artWorkViewController.artwork;
             artWorkViewController.artwork = artwork;
-            
+        }
+        
+        if segue.identifier == "to Artwork Selector" {
+            let artworkSelectorController = segue.destination as! ArtworkSelectorController
+            let artworks: [artworkData] = artworksByLocation[currentLocation] ?? []
+            artworkSelectorController.artworks = artworks
         }
     }
 
