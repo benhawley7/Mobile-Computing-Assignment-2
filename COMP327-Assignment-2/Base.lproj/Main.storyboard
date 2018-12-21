@@ -29,7 +29,7 @@
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zak-Ce-Fc8">
                                         <rect key="frame" x="0.0" y="387" width="414" height="387"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <searchBar key="tableHeaderView" contentMode="redraw" misplaced="YES" id="ZGT-CY-TMV">
+                                        <searchBar key="tableHeaderView" contentMode="redraw" id="ZGT-CY-TMV">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <textInputTraits key="textInputTraits"/>
@@ -38,7 +38,7 @@
                                             </connections>
                                         </searchBar>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="myCell" textLabel="hFo-GU-xjh" detailTextLabel="sS2-6c-wgP" style="IBUITableViewCellStyleSubtitle" id="8sL-ws-n8O">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="myCell" textLabel="hFo-GU-xjh" detailTextLabel="sS2-6c-wgP" style="IBUITableViewCellStyleSubtitle" id="8sL-ws-n8O">
                                                 <rect key="frame" x="0.0" y="72" width="414" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8sL-ws-n8O" id="Yx5-uX-FAV">
@@ -291,6 +291,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="mb7-UQ-wMe"/>
+        <segue reference="Jwb-1I-xwW"/>
     </inferredMetricsTieBreakers>
 </document>
