@@ -51,13 +51,13 @@ class ArtworkSelectorController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         currentArtwork = indexPath.row
 
-        // Segue to the report view controller
+        // Segue to the artwork view controller
         performSegue(withIdentifier: "to Artwork From Selector", sender: tableView)
     }
 
     // Called before we segue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // If we are going to view a report, send the reports data to the view
+        // If we are going to view an artwork, send the artwork data to the view
         if segue.identifier == "to Artwork From Selector" {
             // Assign the artwork property of the view we are about to segue to
             let artWorkViewController = segue.destination as! ArtworkViewController

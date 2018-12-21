@@ -12,7 +12,7 @@ import MapKit
 import CoreLocation
 import CoreData
 
-// Structure of the Tech Report Model
+// Structure of the Artwork Model
 struct artworkData: Decodable {
     let id: String
     let title: String
@@ -28,7 +28,7 @@ struct artworkData: Decodable {
     let enabled: String
 }
 
-// Structure of the Technical Reports JSON Data
+// Structure of the Artworks2 JSON Data
 struct artworksData: Decodable {
     let artworks2: [artworkData]
 }
@@ -118,10 +118,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Array to store the cached artworks
         var artworks: [artworkData] = []
         do {
-            // Try Fetching the Core Data Favourites
+            // Try Fetching the Core Data Artwork
             let results = try context?.fetch(request)
             
-            // For each record result, append the ID string value to the favourites array
+            // For each artwork record, append it to artwork array
             for result in results as! [NSManagedObject] {
                 let id: String = result.value(forKey: "id") as! String
                 let title: String = result.value(forKey: "title") as! String
@@ -140,13 +140,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 artworks.append(artwork)
             }
         } catch {
-            print("Fetching CoreData Favourites Failed.")
+            print("Fetching CoreData Artworks Failed.")
         }
         // Assign the global cached artworks
         cachedArtworks = artworks;
     }
     
-    // Gets the Reports JSON from the weblink and sorts them to be keyed by Year
+    // Gets the Artwork JSON from the weblink
     func downloadArtwork(urlString: String) {
         // Is the string a valid URL?
         if let url = URL(string: urlString) {
@@ -203,10 +203,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             request.returnsObjectsAsFaults = false
             
             do {
-                // Try Fetching the Core Data Favourites
+                // Try Fetching the Core Data Artworks
                 let results = try context?.fetch(request)
                 
-                // For each record result, append the ID string value to the favourites array
+                // For each result, determine if it needs deleting
                 for result in results as! [NSManagedObject] {
                     let id: String = result.value(forKey: "id") as! String
                     // If we have this record ID already, we are going to be updating.
@@ -252,7 +252,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Get all the artworks
         let artworks = cachedArtworks + downloadedArtworks
         
-        // For all the retreived reports
+        // For all the retreived artworks
         for artwork in artworks {
             // Check if the location has been added to the locationsx array and dictionary
             // If it hasn't been, add it
@@ -262,7 +262,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 artworksByLocation[artwork.location] = []
             }
             
-            // Append the report to the relevant dictionary array
+            // Append the artwork to the relevant dictionary array
             artworksByLocation[artwork.location]?.append(artwork)
         }
     }
@@ -464,17 +464,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Functions for updating and interacting with the table
     //
     
-    // The number of sections in the table is determiend by the Number of different unique Report Years
+    // The number of sections in the table is determiend by the Number of different unique artwork locations
     func numberOfSections(in tableView: UITableView) -> Int {
         return locations.count;
     }
     
-    // The title of the section is the corresponding Year sharing the the section index
+    // The title of the section is the corresponding location of artworks sharing the the section index
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return locations[section]
     }
     
-    // The number of rows in a section is determined by the number of reports associated with its year section
+    // The number of rows in a section is determined by the number of artworks associated with its location section
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return artworksByLocation[locations[section]]?.count ?? 0
     }
@@ -497,12 +497,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
-    // When we click a row, set the current year and report based on the index of the section and row
+    // When we click a row, set current location and artwork based on the index of the section and row
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         currentLocation = locations[indexPath.section]
         currentArtwork = indexPath.row
 
-        // Segue to the report view controller
+        // Segue to the artwork view controller
         performSegue(withIdentifier: "to Artwork", sender: tableView)
     }
     
@@ -511,7 +511,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let senderType = "\(type(of: sender.unsafelyUnwrapped))"
 
-        // If we are going to view a report, send the reports data to the view
+        // If we are going to view an artwork, send the artwork data to the view
         if segue.identifier == "to Artwork" {
             // If we are coming from the map view, then we need to use the unfiltered results
             if senderType == "MKMapView" {
