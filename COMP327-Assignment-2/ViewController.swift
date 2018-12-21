@@ -346,6 +346,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Functions for determining the users location
     //
     
+    // Determine the users current location
     func determineCurrentLocation()
     {
         locationManager = CLLocationManager()
@@ -354,12 +355,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         locationManager.requestAlwaysAuthorization()
 
         if CLLocationManager.locationServicesEnabled() {
-            //locationManager.startUpdatingHeading()
             locationManager.startUpdatingLocation()
         }
     }
     
-    //
+    // Function for sorting the users location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation:CLLocation = locations[0] as CLLocation
         
@@ -372,21 +372,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         mapView.setRegion(region, animated: true)
 
+        // Now we know the users location, we can sort the artwork with it
         self.locations.sort{(a, b) -> Bool in
+            // Get location of first artwork
             let artworkA = artworksByLocation[a]?[0]
             let latA = artworkA?.lat ?? ""
             let longA = artworkA?.long ?? ""
             guard let latitudeA = Double(latA) else { return false }
             guard let longitudeA = Double(longA) else { return false}
             let locationA = CLLocation(latitude: latitudeA, longitude: longitudeA)
+            
+            // Get location of second artwork
             let artworkB = artworksByLocation[b]?[0]
             let latB = artworkB?.lat ?? ""
             let longB = artworkB?.long ?? ""
             guard let latitudeB = Double(latB) else { return false}
             guard let longitudeB = Double(longB) else { return false }
             let locationB = CLLocation(latitude: latitudeB, longitude: longitudeB)
+            
+            // Work out the distance of the artworks from the users location
             let distanceA = locationA.distance(from: userLocation)
             let distanceB = locationB.distance(from: userLocation)
+            
+            // Return if the first is closer than the second
             return distanceA < distanceB
         }
 
@@ -410,14 +418,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             guard let lat = artwork?.lat else {
                 return
             }
+            
+            // Create a coordinate with the lat and long values
             guard let latitude = Double(lat) else { return }
             guard let longitude = Double(long) else { return }
             let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
 
+            // Create an annotation with the cooridinate and the title of the location
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
             annotation.title = artwork?.location
             
+            // Add the annotation to the map
             mapView.addAnnotation(annotation)
             
         }
@@ -438,9 +450,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let annotationTitle = annotation?.title!
         currentLocation = annotationTitle ?? ""
         
+        // If we have more than artwork at the location, go to the selector
         if (unfilteredArtworksByLocation[currentLocation]?.count ?? 0 > 1) {
             performSegue(withIdentifier: "to Artwork Selector", sender: mapView)
         } else {
+            // Otherwise got to the artwork view
             currentArtwork = 0
             performSegue(withIdentifier: "to Artwork", sender: mapView)
         }
